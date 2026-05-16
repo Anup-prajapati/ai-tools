@@ -149,108 +149,87 @@
     </div>
 
 <script>
+// 🔴 यहाँ अपने लाइव बैकएंड का असली URL पेस्ट करें (बिना आखरी / के)
+const BACKEND_URL = 'https://your-backend-live-url.onrender.com'; 
 
 async function generateText() {
+    const prompt = document.getElementById('textPrompt').value;
 
-    const prompt =
-        document.getElementById('textPrompt').value;
+    if(!prompt) return alert('Prompt enter karo!');
 
-    if(!prompt)
-        return alert('Prompt enter karo!');
-
-    document.getElementById('textResult').innerHTML =
-        '<div class="loading">⏳ AI soch raha hai...</div>';
+    document.getElementById('textResult').innerHTML = '<div class="loading">⏳ AI soch raha hai...</div>';
 
     try {
-
-        const res = await fetch(
-            'http://localhost:5000/api/generate-text',
-            {
-                method:'POST',
-                headers:{
-                    'Content-Type':'application/json'
-                },
-                body:JSON.stringify({prompt})
-            }
-        );
+        // अब यह लाइव यूआरएल पर हिट करेगा
+        const res = await fetch(`${BACKEND_URL}/api/generate-text`, {
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({prompt})
+        });
 
         const data = await res.json();
 
-        document.getElementById('textResult').innerHTML =
-            `
+        document.getElementById('textResult').innerHTML = `
             <h3>✅ ${data.text}</h3>
-
-            <p>
-                <strong>Tokens:</strong>
-                ${data.tokens}
-            </p>
-            `;
+            <p><strong>Tokens:</strong> ${data.tokens}</p>
+        `;
 
     } catch(e) {
-
-        document.getElementById('textResult').innerHTML =
-            '<p style="color:red;">Error! Backend check karo.</p>';
+        console.error(e); // ब्राउज़र कंसोल में असली एरर देखने के लिए
+        document.getElementById('textResult').innerHTML = '<p style="color:red;">Error! Backend check karo.</p>';
     }
 }
 
 async function generateImage() {
+    const prompt = document.getElementById('imagePrompt').value;
 
-    const prompt =
-        document.getElementById('imagePrompt').value;
+    if(!prompt) return alert('Prompt enter karo!');
 
-    if(!prompt)
-        return alert('Prompt enter karo!');
-
-    document.getElementById('imageResult').innerHTML =
-        '<div class="loading">⏳ Image generate ho rahi hai...</div>';
+    document.getElementById('imageResult').innerHTML = '<div class="loading">⏳ Image generate ho rahi hai...</div>';
 
     try {
-
-        const res = await fetch(
-            'http://localhost:5000/api/generate-image',
-            {
-                method:'POST',
-                headers:{
-                    'Content-Type':'application/json'
-                },
-                body:JSON.stringify({prompt})
-            }
-        );
+        // अब यह लाइव यूआरएल पर हिट करेगा
+        const res = await fetch(`${BACKEND_URL}/api/generate-image`, {
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({prompt})
+        });
 
         const data = await res.json();
 
-        document.getElementById('imageResult').innerHTML = ` <h3>✅ Image Generated!</h3> <img src="${data.image}" alt="${data.prompt}" > `; document.getElementById('downloadBtn').style.display = 'inline-block';
+        if (data.error) {
+            throw new Error(data.error);
+        }
+
+        document.getElementById('imageResult').innerHTML = `
+            <h3>✅ Image Generated!</h3>
+            <img src="${data.image}" alt="${data.prompt}">
+        `;
+        document.getElementById('downloadBtn').style.display = 'inline-block';
 
     } catch(e) {
-
-        document.getElementById('imageResult').innerHTML =
-            '<p style="color:red;">Error! Backend check karo.</p>';
+        console.error(e); // ब्राउज़र कंसोल में असली एरर देखने के लिए
+        document.getElementById('imageResult').innerHTML = '<p style="color:red;">Error! Backend check karo.</p>';
     }
 }
 
 function downloadPhoto() {
-
     const img = document.querySelector('#imageResult img');
 
     if(img){
-
         const a = document.createElement('a');
-
         a.href = img.src;
-
         a.target = '_blank';
-
         a.download = 'ai-image.png';
-
         document.body.appendChild(a);
-
         a.click();
-
         document.body.removeChild(a);
     }
 }
-
-
 </script>
 
 </body>
