@@ -3,7 +3,11 @@ const cors = require('cors');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: ["https://anup-prajapati.github.io", "http://localhost:5000"],
+    methods: ["GET", "POST"],
+    credentials: true
+}));
 app.use(express.json());
 
 // Image Generator API (ONLY ONE)
