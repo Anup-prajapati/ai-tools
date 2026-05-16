@@ -19,7 +19,7 @@ app.post('/api/generate-image', (req, res) => {
         return res.status(400).json({ error: "Prompt required" });
     }
 
-    const realPhoto = `https://source.unsplash.com/600x400/?${encodeURIComponent(prompt)}`;
+   const realPhoto = `https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=600&h=400&q=80`;
 
     res.json({
         image: realPhoto,
