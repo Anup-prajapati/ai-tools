@@ -2,224 +2,97 @@
 <html>
 <head>
     <title>AI Tools Hub</title>
-
     <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-        }
-
-        body{
-            font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-            background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-            min-height:100vh;
-            padding:20px;
-        }
-
-        .container{
-            max-width:900px;
-            margin:0 auto;
-            background:white;
-            border-radius:20px;
-            padding:30px;
-            box-shadow:0 20px 40px rgba(0,0,0,0.1);
-        }
-
-        h1{
-            text-align:center;
-            color:#333;
-            margin-bottom:40px;
-            font-size:2.5em;
-        }
-
-        .tool{
-            margin-bottom:30px;
-            padding:25px;
-            border-radius:15px;
-            background:#f8fafc;
-            border-left:5px solid #6366f1;
-        }
-
-        input{
-            width:100%;
-            padding:15px;
-            font-size:16px;
-            border:2px solid #e2e8f0;
-            border-radius:10px;
-            margin:10px 0;
-            transition:all 0.3s;
-        }
-
-        input:focus{
-            outline:none;
-            border-color:#6366f1;
-        }
-
-        button{
-            padding:15px 30px;
-            background:linear-gradient(45deg,#6366f1,#4f46e5);
-            color:white;
-            border:none;
-            border-radius:10px;
-            font-size:16px;
-            font-weight:600;
-            cursor:pointer;
-            transition:all 0.3s;
-        }
-
-        button:hover{
-            transform:translateY(-2px);
-            box-shadow:0 10px 20px rgba(99,102,241,0.3);
-        }
-
-        #textResult,
-        #imageResult{
-            margin-top:20px;
-            padding:20px;
-            background:#ecfdf5;
-            border-radius:10px;
-            border-left:4px solid #10b981;
-        }
-
-        img{
-            max-width:100%;
-            border-radius:10px;
-            margin-top:15px;
-        }
-
-        .loading{
-            text-align:center;
-            color:#64748b;
-            font-style:italic;
-        }
+        *{ margin:0; padding:0; box-sizing:border-box; }
+        body{ font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height:100vh; padding:20px; }
+        .container{ max-width:900px; margin:0 auto; background:white; border-radius:20px; padding:30px; box-shadow:0 20px 40px rgba(0,0,0,0.1); }
+        h1{ text-align:center; color:#333; margin-bottom:40px; font-size:2.5em; }
+        .tool{ margin-bottom:30px; padding:25px; border-radius:15px; background:#f8fafc; border-left:5px solid #6366f1; }
+        input{ width:100%; padding:15px; font-size:16px; border:2px solid #e2e8f0; border-radius:10px; margin:10px 0; transition:all 0.3s; }
+        input:focus{ outline:none; border-color:#6366f1; }
+        button{ padding:15px 30px; background:linear-gradient(45deg,#6366f1,#4f46e5); color:white; border:none; border-radius:10px; font-size:16px; font-weight:600; cursor:pointer; transition:all 0.3s; }
+        button:hover{ transform:translateY(-2px); box-shadow:0 10px 20px rgba(99,102,241,0.3); }
+        #textResult, #imageResult{ margin-top:20px; padding:20px; background:#ecfdf5; border-radius:10px; border-left:4px solid #10b981; }
+        img{ max-width:100%; border-radius:10px; margin-top:15px; }
+        .loading{ text-align:center; color:#64748b; font-style:italic; }
     </style>
 </head>
-
 <body>
 
     <div class="container">
-
         <h1>🤖 AI Tools Hub</h1>
 
-        <!-- Text Generator -->
         <div class="tool">
-
             <h2>✨ Text Generator</h2>
-
-            <input
-                id="textPrompt"
-                placeholder="Apna question ya text yahan type karo..."
-            >
-
-            <button onclick="generateText()">
-                Generate AI Text
-            </button>
-
+            <input id="textPrompt" placeholder="Apna question ya text yahan type karo...">
+            <button onclick="generateText()">Generate AI Text</button>
             <div id="textResult"></div>
-
         </div>
 
-        <!-- Image Generator -->
         <div class="tool">
-
             <h2>🖼️ Image Generator</h2>
-
-            <input
-                id="imagePrompt"
-                placeholder="Image ka description type karo..."
-            >
-
-            <button onclick="generateImage()">
-                Generate Image
-            </button>
-
+            <input id="imagePrompt" placeholder="Image ka description type karo...">
+            <button onclick="generateImage()">Generate Image</button>
             <div id="imageResult"></div>
-
-            <button
-                onclick="downloadPhoto()"
-                id="downloadBtn"
-                style="display:none; margin-top:10px; background:#10b981;"
-            >
-                💾 Download Photo
-            </button>
-
+            <button onclick="downloadPhoto()" id="downloadBtn" style="display:none; margin-top:10px; background:#10b981;">💾 Download Photo</button>
         </div>
-
     </div>
 
 <script>
-// 🔴 यहाँ अपने लाइव बैकएंड का असली URL पेस्ट करें (बिना आखरी / के)
-const BACKEND_URL = 'https://your-backend-live-url.onrender.com'; 
+// 🔴 आपका लाइव रेलवे बैकएंड URL यहाँ सेट कर दिया है
+const BACKEND_URL = "https://ai-tools-production-4ead.up.railway.app"; 
 
 async function generateText() {
-    const prompt = document.getElementById('textPrompt').value;
-
+    const prompt = document.getElementById('textPrompt').value.trim();
     if(!prompt) return alert('Prompt enter karo!');
 
     document.getElementById('textResult').innerHTML = '<div class="loading">⏳ AI soch raha hai...</div>';
 
     try {
-        // अब यह लाइव यूआरएल पर हिट करेगा
         const res = await fetch(`${BACKEND_URL}/api/generate-text`, {
             method:'POST',
-            headers:{
-                'Content-Type':'application/json'
-            },
+            headers:{ 'Content-Type':'application/json' },
             body:JSON.stringify({prompt})
         });
-
         const data = await res.json();
-
         document.getElementById('textResult').innerHTML = `
-            <h3>✅ ${data.text}</h3>
-            <p><strong>Tokens:</strong> ${data.tokens}</p>
+            <h3>✅ ${data.text || "No response"}</h3>
+            <p><strong>Tokens:</strong> ${data.tokens || 0}</p>
         `;
-
     } catch(e) {
-        console.error(e); // ब्राउज़र कंसोल में असली एरर देखने के लिए
+        console.error(e);
         document.getElementById('textResult').innerHTML = '<p style="color:red;">Error! Backend check karo.</p>';
     }
 }
 
 async function generateImage() {
-    const prompt = document.getElementById('imagePrompt').value;
-
+    const prompt = document.getElementById('imagePrompt').value.trim();
     if(!prompt) return alert('Prompt enter karo!');
 
     document.getElementById('imageResult').innerHTML = '<div class="loading">⏳ Image generate ho rahi hai...</div>';
 
     try {
-        // अब यह लाइव यूआरएल पर हिट करेगा
         const res = await fetch(`${BACKEND_URL}/api/generate-image`, {
             method:'POST',
-            headers:{
-                'Content-Type':'application/json'
-            },
+            headers:{ 'Content-Type':'application/json' },
             body:JSON.stringify({prompt})
         });
-
         const data = await res.json();
-
-        if (data.error) {
-            throw new Error(data.error);
+        
+        if(data.image) {
+            document.getElementById('imageResult').innerHTML = `<h3>✅ Image Generated!</h3><img src="${data.image}" alt="AI Image">`;
+            document.getElementById('downloadBtn').style.display = 'inline-block';
+        } else {
+            throw new Error("Image not found");
         }
-
-        document.getElementById('imageResult').innerHTML = `
-            <h3>✅ Image Generated!</h3>
-            <img src="${data.image}" alt="${data.prompt}">
-        `;
-        document.getElementById('downloadBtn').style.display = 'inline-block';
-
     } catch(e) {
-        console.error(e); // ब्राउज़र कंसोल में असली एरर देखने के लिए
+        console.error(e);
         document.getElementById('imageResult').innerHTML = '<p style="color:red;">Error! Backend check karo.</p>';
     }
 }
 
 function downloadPhoto() {
     const img = document.querySelector('#imageResult img');
-
     if(img){
         const a = document.createElement('a');
         a.href = img.src;
@@ -231,6 +104,5 @@ function downloadPhoto() {
     }
 }
 </script>
-
 </body>
 </html>
